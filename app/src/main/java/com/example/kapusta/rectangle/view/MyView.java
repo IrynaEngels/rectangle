@@ -62,9 +62,11 @@ public class MyView extends View {
             p.setStyle(Paint.Style.STROKE);
             rect.getmRectf().left = 100;
             rect.getmRectf().top = x;
+            rect.getmRectf().right = rect.getmRectf().left + rect.getmRectf().width();
+            rect.getmRectf().bottom = x + rect.getmRectf().height();
 
             canvas.drawRect(rect.getmRectf(), p);
-            x=rect.getmRectf().height()+10;
+            x+=rect.getmRectf().height()+10;
         }
 
     }
