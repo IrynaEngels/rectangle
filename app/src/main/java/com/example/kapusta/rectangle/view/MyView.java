@@ -5,9 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import com.example.kapusta.rectangle.R;
 import com.example.kapusta.rectangle.model.MyRectangle;
 
 import java.util.ArrayList;
@@ -26,15 +30,31 @@ public class MyView extends View {
 
     public MyView(Context context) {
         super(context);
+        init();
+    }
 
-        float y = 50;
+    public MyView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public MyView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init() {
         p = new Paint();
+    }
 
-        for (int i = 0; i < 10; i++) {
+    public void generateRandomFigures() {
+        float y = 50;
+        arrayRectan.clear();
+        for (int i = 0; i < 3; i++) {
             MyRectangle mRectangle = new MyRectangle();
             float x = (float)Math.random()*400;
             float z = (float)Math.random()*100;
-            mRectangle.setmRectf(new RectF(x, y + 50, x + (float)Math.random()*90,y + 50 + z));
+            mRectangle.setmRectf(new RectF(x, y + 50, x + (float)Math.random()*130,y + 50 + z));
             arrayRectan.add(mRectangle);
             y+=z;
         }
@@ -44,8 +64,9 @@ public class MyView extends View {
         for(MyRectangle rect: arrayRectan) {
             Log.d("Tag", "List: " + rect.toString());
         }
-
     }
+
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -54,21 +75,35 @@ public class MyView extends View {
         p.setColor(Color.BLUE);
         p.setStrokeWidth(7);
 
-
-        float x = 50;
+        float x = 0;
+        float y = 0;
         for(MyRectangle rect: arrayRectan) {
-            p.setColor(rect.getColor());
+            if (rect.getmRectf().top + rect.getmRectf().width() <= canvas.getWidth()) {
+                p.setColor(rect.getColor());
 
-            p.setStyle(Paint.Style.STROKE);
-            rect.getmRectf().left = 100;
-            rect.getmRectf().top = x;
-            rect.getmRectf().right = rect.getmRectf().left + rect.getmRectf().width();
-            rect.getmRectf().bottom = x + rect.getmRectf().height();
+                p.setStyle(Paint.Style.STROKE);
+                rect.getmRectf().left = x;
+                rect.getmRectf().top = y;
+//            rect.getmRectf().right = rect.getmRectf().left + rect.getmRectf().width();
+//            rect.getmRectf().bottom = x + rect.getmRectf().height();
 
-            canvas.drawRect(rect.getmRectf(), p);
-            x+=rect.getmRectf().height()+10;
+                canvas.drawRect(rect.getmRectf(), p);
+                x += rect.getmRectf().width();
+
+            }
+            else {
+                y += rect.getmRectf().height();
+                p.setColor(rect.getColor());
+
+                p.setStyle(Paint.Style.STROKE);
+                rect.getmRectf().left = x;
+                rect.getmRectf().top = y;
+
+                canvas.drawRect(rect.getmRectf(), p);
+
+
+            }
         }
-
     }
 
     public float area(RectF rect){
